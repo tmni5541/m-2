@@ -42,5 +42,5 @@ jobs:
             sudo docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} ghcr.io
             sudo docker rm -f ${{ env.CONTAINER_NAME }} || true  # Allow this to fail if the container doesn't exist
             sudo docker pull ${{ env.DOCKER_IMAGE_URL }}
-            sudo docker run --restart=always -d --name ${{ env.CONTAINER_NAME }} -p 9066:3000 ${{ env.DOCKER_IMAGE_URL }}
+            sudo docker run --restart=always -d --name ${{ env.CONTAINER_NAME }} -p 9011:3000 ${{ env.DOCKER_IMAGE_URL }}
 
