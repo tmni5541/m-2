@@ -29,7 +29,7 @@ jobs:
     needs: release-docker-image-job
     runs-on: ubuntu-latest
     env:
-      CONTAINER_NAME: 'node-app'
+      CONTAINER_NAME: 'container-m1'
       DOCKER_IMAGE_URL: 'ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}:${{ github.ref_name }}'
     steps:
       - name: Execute SSH commands on remote server
