@@ -9,7 +9,7 @@ jobs:
 
   release-docker-image-job:
     runs-on: ubuntu-latest
-    permissions: write-all
+    permissions: write-all  
     steps:
       - uses: actions/checkout@v4
 
@@ -17,6 +17,9 @@ jobs:
         run: |
           GA_TRACKING_CODE='<script async src="https://www.googletagmanager.com/gtag/js?id=G-FMJTTPW83R"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag("js", new Date());gtag("config", "G-FMJTTPW83R");</script>'
           find . -name "*.html" ! -exec grep -q 'gtag("config", "G-FMJTTPW83R");' {} \; -exec sed -i "/<\/head>/i ${GA_TRACKING_CODE}" {} \;
+          # อาจเพิ่ม log เพื่อตรวจสอบว่าไฟล์ไหนถูกแก้ไขบ้าง
+          echo "Google Analytics code added to the following files:"
+          find . -name "*.html" -exec echo {} \;
 
       - uses: mr-smithers-excellent/docker-build-push@v6
         with:
@@ -37,10 +40,10 @@ jobs:
         with:
           hosts: 'superuser@123.253.62.249'
           privateKey: ${{ secrets.My_PRIVATE_KEY }}
-          script: |
+          command: |
             sudo docker logout ghcr.io
             sudo docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} ghcr.io
             sudo docker rm -f ${{ env.CONTAINER_NAME }} || true  # Allow this to fail if the container doesn't exist
             sudo docker pull ${{ env.DOCKER_IMAGE_URL }}
             sudo docker run --restart=always -d --name ${{ env.CONTAINER_NAME }} -p 9011:3000 ${{ env.DOCKER_IMAGE_URL }}
-
+          debug: true  
